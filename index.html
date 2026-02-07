@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>For Courtney</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #6a8fc4;
+            --blue-light: #9db8db;
+            --blue-lighter: #dce8f5;
+            --blue-bg: #eef3fa;
+            --periwinkle: #7b9ed4;
+            --gold: #f0c36d;
+            --navy: #3a506b;
+            --white: #ffffff;
+            --warm-gray: #6b7d94;
+        }
+
+        body {
+            font-family: 'Quicksand', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #e8eff8 0%, #d4e2f2 30%, #bdd0ea 60%, #e8eff8 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--navy);
+            position: relative;
+        }
+
+        /* ── Floating Cats Background ── */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: -80px;
+            opacity: 0;
+            animation: floatUp linear infinite;
+            font-size: 20px;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.55;
+            }
+            90% {
+                opacity: 0.35;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(360deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* ── Main Layout ── */
+        .container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 16px 40px;
+            min-height: 100vh;
+        }
+
+        .title {
+            font-family: 'Comfortaa', cursive;
+            font-size: clamp(28px, 6vw, 48px);
+            color: var(--navy);
+            text-shadow: 0 2px 10px rgba(58, 80, 107, 0.15);
+            margin-bottom: 6px;
+            text-align: center;
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        .cat-subtitle {
+            font-size: clamp(22px, 4vw, 32px);
+            margin-bottom: 20px;
+            animation: catWiggle 2s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes catWiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        /* ── Progress ── */
+        .progress-bar-container {
+            width: 100%;
+            max-width: 560px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(58, 80, 107, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--blue-light), var(--blue), var(--periwinkle));
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: var(--warm-gray);
+            margin-bottom: 16px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        /* ── Puzzle Board ── */
+        .puzzle-wrapper {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .puzzle-board {
+            display: grid;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 16px;
+            box-shadow:
+                0 8px 32px rgba(106, 143, 196, 0.15),
+                0 2px 8px rgba(0, 0, 0, 0.05),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .board-cell {
+            position: relative;
+            border: 1px solid rgba(106, 143, 196, 0.12);
+            background: rgba(255, 255, 255, 0.15);
+            transition: background 0.25s ease, box-shadow 0.25s ease;
+            z-index: 1;
+        }
+
+        .board-cell.highlight {
+            background: rgba(240, 195, 109, 0.25);
+            box-shadow: inset 0 0 20px rgba(240, 195, 109, 0.15);
+        }
+
+        .board-cell.filled {
+            background: transparent;
+            border-color: transparent;
+        }
+
+        /* ── Puzzle Pieces ── */
+        .pieces-tray {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-width: 640px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(106, 143, 196, 0.1);
+            min-height: 80px;
+            border: 2px dashed rgba(106, 143, 196, 0.2);
+            transition: border-color 0.3s ease;
+        }
+
+        .pieces-tray:empty::after {
+            content: 'All pieces found! Meow~';
+            color: var(--blue-light);
+            font-style: italic;
+            font-size: 14px;
+            align-self: center;
+        }
+
+        .puzzle-piece {
+            width: var(--piece-w);
+            height: var(--piece-h);
+            background-image: var(--puzzle-image);
+            background-size: var(--bg-size);
+            border-radius: 8px;
+            cursor: grab;
+            box-shadow:
+                0 3px 10px rgba(0, 0, 0, 0.1),
+                0 1px 3px rgba(0, 0, 0, 0.06);
+            transition:
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s ease,
+                opacity 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            position: relative;
+            z-index: 10;
+        }
+
+        .puzzle-piece:hover {
+            transform: scale(1.06) rotate(-1deg);
+            box-shadow:
+                0 8px 24px rgba(106, 143, 196, 0.25),
+                0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .puzzle-piece.dragging {
+            cursor: grabbing;
+            transform: scale(1.1);
+            box-shadow:
+                0 16px 48px rgba(106, 143, 196, 0.3),
+                0 6px 16px rgba(0, 0, 0, 0.12);
+            z-index: 1000;
+            opacity: 0.92;
+            transition: box-shadow 0.15s ease, opacity 0.15s ease;
+        }
+
+        .puzzle-piece.placed {
+            border-radius: 0;
+            box-shadow: none;
+            cursor: default;
+            pointer-events: none;
+            animation: snapIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes snapIn {
+            0% { transform: scale(1.15); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        .puzzle-piece.returning {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ── Sparkle Effect ── */
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .sparkle-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: sparkleOut 0.7s ease-out forwards;
+        }
+
+        @keyframes sparkleOut {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* ── Paw Print Burst on Snap ── */
+        .paw-burst {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            font-size: 18px;
+            animation: pawPop 0.6s ease-out forwards;
+        }
+
+        @keyframes pawPop {
+            0% {
+                transform: translate(var(--tx), var(--ty)) scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(1.2) rotate(var(--rot));
+                opacity: 0;
+            }
+        }
+
+        /* ── Reference Image Button ── */
+        .ref-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+            background: var(--white);
+            border: 2px solid var(--blue-light);
+            color: var(--blue);
+            padding: 10px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(106, 143, 196, 0.15);
+            transition: all 0.25s ease;
+        }
+
+        .ref-btn:hover {
+            background: var(--blue);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .ref-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(58, 80, 107, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .ref-modal.show {
+            display: flex;
+        }
+
+        .ref-modal img {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .ref-close {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: var(--white);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--navy);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease;
+        }
+
+        .ref-close:hover {
+            transform: scale(1.1);
+        }
+
+        /* ── Celebration Overlay ── */
+        .celebration {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            justify-content: center;
+            align-items: center;
+            background: rgba(220, 232, 245, 0.88);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .celebration.show {
+            display: flex;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .celebration-content {
+            text-align: center;
+            padding: 40px 32px;
+            max-width: 500px;
+            animation: celebSlideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+        }
+
+        @keyframes celebSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .celebration-cat {
+            font-size: 64px;
+            animation: catBounce 1.2s ease-in-out infinite;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        @keyframes catBounce {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            20% { transform: scale(1.2) rotate(-5deg); }
+            40% { transform: scale(1) rotate(0deg); }
+            60% { transform: scale(1.15) rotate(5deg); }
+            80% { transform: scale(1) rotate(0deg); }
+        }
+
+        .celebration h2 {
+            font-family: 'Comfortaa', cursive;
+            font-size: clamp(28px, 7vw, 46px);
+            color: var(--navy);
+            margin-bottom: 16px;
+            text-shadow: 0 2px 12px rgba(106, 143, 196, 0.2);
+        }
+
+        .celebration .message {
+            font-size: clamp(15px, 3vw, 19px);
+            color: var(--navy);
+            line-height: 1.7;
+            margin-bottom: 28px;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeIn 0.6s ease 1s forwards;
+        }
+
+        .celebration .completed-image {
+            width: 100%;
+            max-width: 380px;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(106, 143, 196, 0.2);
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease 0.8s forwards;
+        }
+
+        .replay-btn {
+            background: linear-gradient(135deg, var(--blue), var(--periwinkle));
+            color: var(--white);
+            border: none;
+            padding: 14px 36px;
+            border-radius: 30px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(106, 143, 196, 0.3);
+            transition: all 0.25s ease;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 1.3s forwards;
+        }
+
+        .replay-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(106, 143, 196, 0.4);
+        }
+
+        /* ── Confetti Canvas ── */
+        .confetti-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 501;
+            pointer-events: none;
+        }
+
+        /* ── Loading State ── */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding: 60px;
+        }
+
+        .loading-cat {
+            font-size: 40px;
+            animation: catBounce 1.2s ease-in-out infinite;
+        }
+
+        .loading-text {
+            color: var(--blue);
+            font-weight: 500;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .container {
+                padding: 14px 10px 30px;
+            }
+
+            .pieces-tray {
+                gap: 6px;
+                padding: 14px 10px;
+            }
+
+            .ref-btn {
+                bottom: 14px;
+                right: 14px;
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Floating Cats Background -->
+<div class="floating-hearts" id="floatingHearts"></div>
+
+<!-- Main Container -->
+<div class="container" id="app">
+    <h1 class="title">For Courtney :)</h1>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <p class="progress-text" id="progressText">0 / 12 pieces placed</p>
+
+    <div class="puzzle-wrapper">
+        <div class="puzzle-board" id="puzzleBoard"></div>
+    </div>
+
+    <div class="pieces-tray" id="piecesTray"></div>
+</div>
+
+<!-- Reference Image Button & Modal -->
+<button class="ref-btn" id="refBtn">&#x1F43E; Peek at Image</button>
+<div class="ref-modal" id="refModal">
+    <button class="ref-close" id="refClose">&times;</button>
+    <img src="cutephoto.png" alt="Reference">
+</div>
+
+<!-- Celebration Overlay -->
+<div class="celebration" id="celebration">
+    <div class="celebration-content">
+        <div class="celebration-cat">&#x1F431;&#x1F496;</div>
+        <h2>Happy Valentine's Day, Courtney!</h2>
+        <img class="completed-image" src="cutephoto.png" alt="Completed puzzle">
+        <p class="message">
+            To the best gf ever.<br>
+            I love you so much. &#x1F339;
+        </p>
+        <button class="replay-btn" id="replayBtn">&#x1F43E; Play Again</button>
+    </div>
+</div>
+
+<!-- Confetti Canvas -->
+<canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+
+<script>
+(() => {
+    // ── Configuration ──
+    const COLS = 4;
+    const ROWS = 3;
+    const TOTAL = COLS * ROWS;
+    const IMAGE_SRC = 'cutephoto.png';
+
+    // ── DOM Elements ──
+    const board = document.getElementById('puzzleBoard');
+    const tray = document.getElementById('piecesTray');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const celebration = document.getElementById('celebration');
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const refBtn = document.getElementById('refBtn');
+    const refModal = document.getElementById('refModal');
+    const refClose = document.getElementById('refClose');
+    const replayBtn = document.getElementById('replayBtn');
+
+    // ── State ──
+    let placedCount = 0;
+    let boardCells = [];
+    let pieces = [];
+    let dragState = null;
+    let puzzlePieceW = 0;
+    let puzzlePieceH = 0;
+
+    // ── Create Floating Cat Elements ──
+    function createFloatingHearts() {
+        const container = document.getElementById('floatingHearts');
+        const icons = [
+            '\u{1F43E}', '\u{1F431}', '\u{1F408}', '\u{1F43E}',
+            '\u{1F9F6}', '\u{1F41F}', '\u{1F43E}', '\u{1F431}',
+            '\u{2764}\uFE0F', '\u{1F43E}', '\u{1F408}\u200D\u2B1B', '\u{1F43E}'
+        ];
+        for (let i = 0; i < 20; i++) {
+            const el = document.createElement('div');
+            el.className = 'floating-heart';
+            el.textContent = icons[i % icons.length];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.fontSize = (14 + Math.random() * 18) + 'px';
+            el.style.animationDuration = (8 + Math.random() * 12) + 's';
+            el.style.animationDelay = (Math.random() * 15) + 's';
+            container.appendChild(el);
+        }
+    }
+
+    // ── Fisher-Yates Shuffle ──
+    function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // ── Compute Board Size ──
+    function computeBoardSize(imgW, imgH) {
+        const maxW = Math.min(560, window.innerWidth - 40);
+        const aspect = imgW / imgH;
+        const w = maxW;
+        const h = w / aspect;
+        return { boardW: Math.round(w), boardH: Math.round(h) };
+    }
+
+    // ── Initialize Puzzle ──
+    function initPuzzle() {
+        const img = new Image();
+        img.onload = () => setupPuzzle(img);
+        img.onerror = () => {
+            board.innerHTML = '<div class="loading"><p class="loading-text">Could not load image.</p></div>';
+        };
+        img.src = IMAGE_SRC;
+
+        board.innerHTML = '<div class="loading"><div class="loading-cat">\u{1F431}</div><p class="loading-text">Loading your puzzle...</p></div>';
+    }
+
+    function setupPuzzle(img) {
+        placedCount = 0;
+        boardCells = [];
+        pieces = [];
+        dragState = null;
+        board.innerHTML = '';
+        tray.innerHTML = '';
+        celebration.classList.remove('show');
+        stopConfetti();
+        updateProgress();
+
+        const { boardW, boardH } = computeBoardSize(img.naturalWidth, img.naturalHeight);
+        puzzlePieceW = boardW / COLS;
+        puzzlePieceH = boardH / ROWS;
+
+        // Set CSS custom properties
+        const root = document.documentElement;
+        root.style.setProperty('--piece-w', puzzlePieceW + 'px');
+        root.style.setProperty('--piece-h', puzzlePieceH + 'px');
+        root.style.setProperty('--bg-size', boardW + 'px ' + boardH + 'px');
+        root.style.setProperty('--puzzle-image', `url('${IMAGE_SRC}')`);
+
+        // Setup board grid
+        board.style.width = boardW + 'px';
+        board.style.height = boardH + 'px';
+        board.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+        board.style.gridTemplateRows = `repeat(${ROWS}, 1fr)`;
+
+        // Create board cells
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                const cell = document.createElement('div');
+                cell.className = 'board-cell';
+                cell.dataset.row = r;
+                cell.dataset.col = c;
+                board.appendChild(cell);
+                boardCells.push({ el: cell, row: r, col: c, filled: false });
+            }
+        }
+
+        // Create pieces
+        const indices = [];
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                indices.push({ row: r, col: c });
+            }
+        }
+        shuffle(indices);
+
+        indices.forEach(({ row, col }) => {
+            const piece = document.createElement('div');
+            piece.className = 'puzzle-piece';
+
+            const bgX = col * puzzlePieceW;
+            const bgY = row * puzzlePieceH;
+            piece.style.backgroundPosition = `-${bgX}px -${bgY}px`;
+
+            piece.dataset.row = row;
+            piece.dataset.col = col;
+
+            tray.appendChild(piece);
+            pieces.push({ el: piece, row, col, placed: false });
+
+            piece.addEventListener('mousedown', onDragStart);
+            piece.addEventListener('touchstart', onDragStart, { passive: false });
+        });
+    }
+
+    // ── Drag & Drop ──
+    function getPointer(e) {
+        if (e.touches && e.touches.length > 0) {
+            return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+        return { x: e.clientX, y: e.clientY };
+    }
+
+    function onDragStart(e) {
+        if (dragState) return;
+        const piece = e.currentTarget;
+        if (piece.classList.contains('placed')) return;
+
+        e.preventDefault();
+
+        const origRect = piece.getBoundingClientRect();
+        const pointer = getPointer(e);
+
+        piece.style.position = 'fixed';
+        piece.style.left = origRect.left + 'px';
+        piece.style.top = origRect.top + 'px';
+        piece.style.width = puzzlePieceW + 'px';
+        piece.style.height = puzzlePieceH + 'px';
+        piece.style.zIndex = '1000';
+        piece.style.margin = '0';
+        document.body.appendChild(piece);
+
+        piece.classList.add('dragging');
+
+        dragState = {
+            piece,
+            offsetX: pointer.x - origRect.left,
+            offsetY: pointer.y - origRect.top,
+            startLeft: origRect.left,
+            startTop: origRect.top,
+            fromTray: true
+        };
+
+        document.addEventListener('mousemove', onDragMove);
+        document.addEventListener('mouseup', onDragEnd);
+        document.addEventListener('touchmove', onDragMove, { passive: false });
+        document.addEventListener('touchend', onDragEnd);
+    }
+
+    function onDragMove(e) {
+        if (!dragState) return;
+        e.preventDefault();
+
+        const pointer = getPointer(e);
+        const x = pointer.x - dragState.offsetX;
+        const y = pointer.y - dragState.offsetY;
+
+        dragState.piece.style.left = x + 'px';
+        dragState.piece.style.top = y + 'px';
+
+        highlightCell(pointer);
+    }
+
+    function onDragEnd(e) {
+        if (!dragState) return;
+
+        const pointer = e.changedTouches ? {
+            x: e.changedTouches[0].clientX,
+            y: e.changedTouches[0].clientY
+        } : { x: e.clientX, y: e.clientY };
+
+        const { piece } = dragState;
+        piece.classList.remove('dragging');
+        clearHighlights();
+
+        const targetCell = findTargetCell(pointer, piece);
+
+        if (targetCell) {
+            placePiece(piece, targetCell);
+        } else {
+            returnToTray(piece);
+        }
+
+        document.removeEventListener('mousemove', onDragMove);
+        document.removeEventListener('mouseup', onDragEnd);
+        document.removeEventListener('touchmove', onDragMove);
+        document.removeEventListener('touchend', onDragEnd);
+        dragState = null;
+    }
+
+    function findTargetCell(pointer, piece) {
+        const pieceRow = parseInt(piece.dataset.row);
+        const pieceCol = parseInt(piece.dataset.col);
+
+        for (const cell of boardCells) {
+            if (cell.filled) continue;
+            const rect = cell.el.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dist = Math.hypot(pointer.x - cx, pointer.y - cy);
+
+            if (dist < Math.max(puzzlePieceW, puzzlePieceH) * 0.7) {
+                if (cell.row === pieceRow && cell.col === pieceCol) {
+                    return cell;
+                }
+            }
+        }
+        return null;
+    }
+
+    function highlightCell(pointer) {
+        clearHighlights();
+        for (const cell of boardCells) {
+            if (cell.filled) continue;
+            const rect = cell.el.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dist = Math.hypot(pointer.x - cx, pointer.y - cy);
+            if (dist < Math.max(puzzlePieceW, puzzlePieceH) * 0.7) {
+                cell.el.classList.add('highlight');
+                break;
+            }
+        }
+    }
+
+    function clearHighlights() {
+        boardCells.forEach(c => c.el.classList.remove('highlight'));
+    }
+
+    function placePiece(piece, cell) {
+        const cellRect = cell.el.getBoundingClientRect();
+
+        piece.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        piece.style.left = cellRect.left + 'px';
+        piece.style.top = cellRect.top + 'px';
+        piece.style.width = cellRect.width + 'px';
+        piece.style.height = cellRect.height + 'px';
+
+        setTimeout(() => {
+            piece.style.position = 'absolute';
+            piece.style.left = '0';
+            piece.style.top = '0';
+            piece.style.width = '100%';
+            piece.style.height = '100%';
+            piece.style.zIndex = '';
+            piece.style.margin = '';
+            piece.style.transition = '';
+            piece.classList.add('placed');
+            cell.el.classList.add('filled');
+            cell.el.appendChild(piece);
+            cell.filled = true;
+
+            piece.removeEventListener('mousedown', onDragStart);
+            piece.removeEventListener('touchstart', onDragStart);
+
+            createSparkles(cell.el);
+            createPawBurst(cell.el);
+
+            placedCount++;
+            updateProgress();
+
+            if (placedCount === TOTAL) {
+                setTimeout(showCelebration, 600);
+            }
+        }, 300);
+    }
+
+    function returnToTray(piece) {
+        piece.classList.add('returning');
+
+        const trayRect = tray.getBoundingClientRect();
+        const targetX = trayRect.left + Math.random() * (trayRect.width - puzzlePieceW);
+        const targetY = trayRect.top + 10;
+
+        piece.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+        piece.style.left = targetX + 'px';
+        piece.style.top = targetY + 'px';
+
+        setTimeout(() => {
+            piece.style.position = '';
+            piece.style.left = '';
+            piece.style.top = '';
+            piece.style.width = '';
+            piece.style.height = '';
+            piece.style.zIndex = '';
+            piece.style.margin = '';
+            piece.style.transition = '';
+            piece.classList.remove('returning');
+            tray.appendChild(piece);
+        }, 400);
+    }
+
+    // ── Sparkles ──
+    function createSparkles(parent) {
+        const rect = parent.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+
+        const container = document.createElement('div');
+        container.className = 'sparkle';
+        container.style.left = cx + 'px';
+        container.style.top = cy + 'px';
+        document.body.appendChild(container);
+
+        const colors = ['#f0c36d', '#9db8db', '#6a8fc4', '#bdd0ea', '#fff'];
+        for (let i = 0; i < 10; i++) {
+            const p = document.createElement('div');
+            p.className = 'sparkle-particle';
+            const angle = (Math.PI * 2 * i) / 10;
+            const dist = 25 + Math.random() * 30;
+            p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+            p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+            p.style.background = colors[i % colors.length];
+            container.appendChild(p);
+        }
+
+        setTimeout(() => container.remove(), 800);
+    }
+
+    // ── Paw Print Burst ──
+    function createPawBurst(parent) {
+        const rect = parent.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+
+        for (let i = 0; i < 4; i++) {
+            const paw = document.createElement('div');
+            paw.className = 'paw-burst';
+            paw.textContent = '\u{1F43E}';
+            const angle = (Math.PI * 2 * i) / 4 + Math.random() * 0.5;
+            const dist = 30 + Math.random() * 25;
+            paw.style.left = cx + 'px';
+            paw.style.top = cy + 'px';
+            paw.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+            paw.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+            paw.style.setProperty('--rot', (Math.random() * 60 - 30) + 'deg');
+            document.body.appendChild(paw);
+            setTimeout(() => paw.remove(), 700);
+        }
+    }
+
+    // ── Progress ──
+    function updateProgress() {
+        const pct = (placedCount / TOTAL) * 100;
+        progressBar.style.width = pct + '%';
+        progressText.textContent = `${placedCount} / ${TOTAL} pieces placed`;
+    }
+
+    // ── Celebration ──
+    function showCelebration() {
+        celebration.classList.add('show');
+        startConfetti();
+    }
+
+    // ── Confetti (Hearts + Paws + Cats) ──
+    let confettiAnimId = null;
+    let confettiParticles = [];
+
+    function startConfetti() {
+        const ctx = confettiCanvas.getContext('2d');
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+        confettiParticles = [];
+
+        for (let i = 0; i < 80; i++) {
+            confettiParticles.push({
+                x: Math.random() * confettiCanvas.width,
+                y: -20 - Math.random() * confettiCanvas.height,
+                size: 8 + Math.random() * 14,
+                speedY: 1 + Math.random() * 2.5,
+                speedX: (Math.random() - 0.5) * 2,
+                rotation: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.08,
+                color: ['#6a8fc4', '#9db8db', '#bdd0ea', '#f0c36d', '#7b9ed4', '#3a506b'][Math.floor(Math.random() * 6)],
+                opacity: 0.7 + Math.random() * 0.3,
+                type: Math.random() < 0.4 ? 'paw' : (Math.random() < 0.5 ? 'cat' : 'heart')
+            });
+        }
+
+        function drawHeart(ctx, x, y, size, rotation, color, opacity) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+            ctx.scale(size / 30, size / 30);
+            ctx.globalAlpha = opacity;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(0, -8);
+            ctx.bezierCurveTo(-10, -18, -20, -6, 0, 10);
+            ctx.moveTo(0, -8);
+            ctx.bezierCurveTo(10, -18, 20, -6, 0, 10);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawPaw(ctx, x, y, size, rotation, color, opacity) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+            ctx.globalAlpha = opacity;
+            ctx.fillStyle = color;
+            const s = size / 20;
+            // Main pad
+            ctx.beginPath();
+            ctx.ellipse(0, 2 * s, 5 * s, 6 * s, 0, 0, Math.PI * 2);
+            ctx.fill();
+            // Toes
+            const toes = [[-4.5 * s, -5 * s], [-1.5 * s, -7 * s], [1.5 * s, -7 * s], [4.5 * s, -5 * s]];
+            toes.forEach(([tx, ty]) => {
+                ctx.beginPath();
+                ctx.ellipse(tx, ty, 2 * s, 2.5 * s, 0, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.restore();
+        }
+
+        function drawCat(ctx, x, y, size, rotation, color, opacity) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+            ctx.globalAlpha = opacity;
+            ctx.fillStyle = color;
+            const s = size / 22;
+            // Head
+            ctx.beginPath();
+            ctx.arc(0, 0, 6 * s, 0, Math.PI * 2);
+            ctx.fill();
+            // Left ear
+            ctx.beginPath();
+            ctx.moveTo(-5 * s, -4 * s);
+            ctx.lineTo(-7 * s, -10 * s);
+            ctx.lineTo(-1 * s, -6 * s);
+            ctx.closePath();
+            ctx.fill();
+            // Right ear
+            ctx.beginPath();
+            ctx.moveTo(5 * s, -4 * s);
+            ctx.lineTo(7 * s, -10 * s);
+            ctx.lineTo(1 * s, -6 * s);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+            confettiParticles.forEach(p => {
+                p.y += p.speedY;
+                p.x += p.speedX;
+                p.rotation += p.rotSpeed;
+                p.speedX += (Math.random() - 0.5) * 0.1;
+
+                if (p.y > confettiCanvas.height + 30) {
+                    p.y = -20;
+                    p.x = Math.random() * confettiCanvas.width;
+                }
+
+                if (p.type === 'paw') {
+                    drawPaw(ctx, p.x, p.y, p.size, p.rotation, p.color, p.opacity);
+                } else if (p.type === 'cat') {
+                    drawCat(ctx, p.x, p.y, p.size, p.rotation, p.color, p.opacity);
+                } else {
+                    drawHeart(ctx, p.x, p.y, p.size, p.rotation, p.color, p.opacity);
+                }
+            });
+
+            confettiAnimId = requestAnimationFrame(animate);
+        }
+
+        animate();
+    }
+
+    function stopConfetti() {
+        if (confettiAnimId) {
+            cancelAnimationFrame(confettiAnimId);
+            confettiAnimId = null;
+        }
+        const ctx = confettiCanvas.getContext('2d');
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+    }
+
+    // ── Reference Image Modal ──
+    refBtn.addEventListener('click', () => refModal.classList.add('show'));
+    refClose.addEventListener('click', () => refModal.classList.remove('show'));
+    refModal.addEventListener('click', (e) => {
+        if (e.target === refModal) refModal.classList.remove('show');
+    });
+
+    // ── Replay ──
+    replayBtn.addEventListener('click', () => {
+        initPuzzle();
+    });
+
+    // ── Handle Resize ──
+    window.addEventListener('resize', () => {
+        if (confettiAnimId) {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+    });
+
+    // ── Start ──
+    createFloatingHearts();
+    initPuzzle();
+})();
+</script>
+</body>
+</html>
