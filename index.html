@@ -376,15 +376,15 @@
             position: fixed;
             inset: 0;
             z-index: 500;
-            justify-content: center;
-            align-items: center;
             background: rgba(220, 232, 245, 0.88);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .celebration.show {
-            display: flex;
+            display: block;
             animation: fadeIn 0.8s ease;
         }
 
@@ -397,6 +397,7 @@
             text-align: center;
             padding: 40px 32px;
             max-width: 500px;
+            margin: 0 auto;
             animation: celebSlideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
         }
 
@@ -473,6 +474,62 @@
         .replay-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(106, 143, 196, 0.4);
+        }
+
+        /* ── Photo Carousel ── */
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto 24px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(106, 143, 196, 0.2);
+            opacity: 0;
+            animation: fadeIn 0.6s ease 0.8s forwards;
+            aspect-ratio: auto;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+            position: relative;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease 0.8s forwards;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--blue-lighter);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background: var(--blue);
+            transform: scale(1.3);
         }
 
         /* ── Confetti Canvas ── */
@@ -554,10 +611,40 @@
     <div class="celebration-content">
         <div class="celebration-cat">&#x1F431;&#x1F496;</div>
         <h2>Happy Valentine's Day, Courtney!</h2>
-        <img class="completed-image" src="cutephoto.png" alt="Completed puzzle">
+        <div class="carousel" id="carousel">
+            <img class="carousel-slide active" src="cutephoto.png" alt="Completed puzzle">
+            <img class="carousel-slide" src="slide_show_photos/IMG_4531.jpg" alt="Photo">
+            <img class="carousel-slide" src="slide_show_photos/IMG_1014.jpg" alt="Photo">
+            <img class="carousel-slide" src="slide_show_photos/IMG_1865.jpg" alt="Photo">
+            <img class="carousel-slide" src="slide_show_photos/IMG_1897.jpg" alt="Photo">
+            <img class="carousel-slide" src="slide_show_photos/IMG_0343.jpg" alt="Photo">
+            <img class="carousel-slide" src="slide_show_photos/DSC02998.JPG" alt="Photo">
+            <img class="carousel-slide" src="slide_show_photos/IMG_1281_Original.JPG" alt="Photo">
+            <img class="carousel-slide" src="slide_show_photos/IMG_5512.JPG" alt="Photo">
+        </div>
+        <div class="carousel-dots" id="carouselDots">
+            <button class="carousel-dot active" data-index="0"></button>
+            <button class="carousel-dot" data-index="1"></button>
+            <button class="carousel-dot" data-index="2"></button>
+            <button class="carousel-dot" data-index="3"></button>
+            <button class="carousel-dot" data-index="4"></button>
+            <button class="carousel-dot" data-index="5"></button>
+            <button class="carousel-dot" data-index="6"></button>
+            <button class="carousel-dot" data-index="7"></button>
+            <button class="carousel-dot" data-index="8"></button>
+        </div>
         <p class="message">
-            To the best gf ever.<br>
-            I love you so much. &#x1F339;
+            To Courteny,<br><br>
+            I want to start off by saying that I've
+            really appreciated the past year of us being together. 
+            I know it can be touch sometimes to deal with me and 
+            my unseriousness, so thank you for putting up with that.
+            I've been tryign to be better and I hope it shows :) <br><br>
+
+            You have been a really amazing girlfrind and so understanding
+            of my situations. I hope to give you so much more soon. <br><br>
+
+            I love you so much and super excited about the years to come!! &#x1F339;
         </p>
         <button class="replay-btn" id="replayBtn">&#x1F43E; Play Again</button>
     </div>
@@ -653,6 +740,7 @@
         tray.innerHTML = '';
         celebration.classList.remove('show');
         stopConfetti();
+        stopCarousel();
         updateProgress();
 
         const { boardW, boardH } = computeBoardSize(img.naturalWidth, img.naturalHeight);
@@ -956,9 +1044,45 @@
     }
 
     // ── Celebration ──
+    let carouselInterval = null;
+
     function showCelebration() {
         celebration.classList.add('show');
         startConfetti();
+        startCarousel();
+    }
+
+    function startCarousel() {
+        if (carouselInterval) clearInterval(carouselInterval);
+        const slides = document.querySelectorAll('#carousel .carousel-slide');
+        const dots = document.querySelectorAll('#carouselDots .carousel-dot');
+        let current = 0;
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                current = parseInt(dot.dataset.index);
+                updateSlide();
+            });
+        });
+
+        function updateSlide() {
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            slides[current].classList.add('active');
+            dots[current].classList.add('active');
+        }
+
+        carouselInterval = setInterval(() => {
+            current = (current + 1) % slides.length;
+            updateSlide();
+        }, 3000);
+    }
+
+    function stopCarousel() {
+        if (carouselInterval) {
+            clearInterval(carouselInterval);
+            carouselInterval = null;
+        }
     }
 
     // ── Confetti (Hearts + Paws + Cats) ──
